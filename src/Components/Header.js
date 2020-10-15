@@ -52,7 +52,7 @@ function Header() {
 
             <div className="header__right">
                 <div className="header__info">
-                    <Avatar alt="Adrian" src="image-source"/>
+                    <Avatar alt="Adrian" src="https://scontent-mia3-1.xx.fbcdn.net/v/t1.0-9/94235878_10215623293391506_6975524731248181248_n.jpg?_nc_cat=104&_nc_sid=85a577&_nc_ohc=YS7V780FovUAX9hcoKp&_nc_ht=scontent-mia3-1.xx&oh=b58138cdf6056d96d32eec3c5ad82db2&oe=5FADF4F4"/>
 
                     <h4>
                         Adrian

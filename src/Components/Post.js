@@ -28,9 +28,18 @@ function Post({ profilePic, imgName, username, timestamp, message }) {
             <div className="post__bottom">
                 <p>
                     {message}
-                    {/* image is coming later */}
                 </p>
             </div>
+
+            {
+                imgName ? (
+                    <div className="post__image">
+                        <img src={`https://fb-mern-clone-adrianchi.herokuapp.com/retrieve/images/single?name=${imgName}`}/>
+                    </div>
+                ) : (
+                    console.log()
+                )
+            }
 
             <div className="post__options">
                 <div className="post__option">

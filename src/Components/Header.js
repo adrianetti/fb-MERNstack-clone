@@ -13,9 +13,20 @@ import AddIcon from '@material-ui/icons/Add';
 import ForumIcon from '@material-ui/icons/Forum';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useStateValue } from '../StateProvider';
+import { auth } from '../firebase';
+import { useHistory } from 'react-router';
 
 
 function Header() {
+    const [{ user }, dispatch] = useStateValue();
+    const history = useHistory();
+    
+    const signOut = () => {
+        auth.signOut()
+        history.push("/login")
+    }
+
     return (
         <div className="header">
             <div className="header__left">
@@ -52,10 +63,10 @@ function Header() {
 
             <div className="header__right">
                 <div className="header__info">
-                    <Avatar alt="Adrian" src="https://scontent-mia3-1.xx.fbcdn.net/v/t1.0-9/94235878_10215623293391506_6975524731248181248_n.jpg?_nc_cat=104&_nc_sid=85a577&_nc_ohc=YS7V780FovUAX9hcoKp&_nc_ht=scontent-mia3-1.xx&oh=b58138cdf6056d96d32eec3c5ad82db2&oe=5FADF4F4"/>
+                    <Avatar alt={user?.displayName} src={user?.photoURL}/>
 
                     <h4>
-                        Adrian
+                        {user?.displayName}
                     </h4>
                     
                     <IconButton>
@@ -70,7 +81,7 @@ function Header() {
                         <NotificationsActiveIcon />
                     </IconButton>
                         
-                    <IconButton>
+                    <IconButton onClick={signOut}>
                         <ExpandMoreIcon />
                     </IconButton>                    
                 </div>

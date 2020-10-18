@@ -6,9 +6,16 @@ import VideocamIcon from '@material-ui/icons/Videocam'
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 
+import axios from '../axios'
+import FormData from 'form-data'
+import { useStateValue } from '../StateProvider'
+
 function MessageSender() {
+    const [{user}, dispatch] = useStateValue()
+
     const [input, setInput] = useState('')
     const [image, setImage] = useState(null)
+    const [imageUrl, setImageUrl] = useState('')
 
     const handleChange = (e) => {
         if (e.target.files[0]) {
@@ -18,21 +25,68 @@ function MessageSender() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("submitting");
 
+        if (image) {
+            const imgForm = new FormData();
+            imgForm.append('file', image, image.name)
+
+            axios.post('/upload/image', imgForm, {
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': `multipart/form-data; boundary=${imgForm._boundary}`
+                }
+            })
+            .then((res) => {
+                console.log(res.data)
+
+                const postData = {
+                    text: input,
+                    imgName: res.data.filename,
+                    avatar: user.photoURL,
+                    timestamp: Date.now(),
+                    user: user.displayName,
+                }
+
+                console.log(postData)
+                savePost(postData)
+            })
+        }
+        else {
+            const postData = {
+                text: input,
+                avatar: user.photoURL,
+                timestamp: Date.now(),
+                user: user.displayName,
+            }
+
+            console.log(postData)
+            savePost(postData)
+        }
+        
+        setImageUrl('')
+        setImage(null)
+        setInput('')
+    }
+
+    const savePost = async (postData) => {
+        await axios.post('/upload/post', postData)
+            .then((res) => {
+                console.log(res)
+                window.location.reload(false)
+            })
     }
 
     return (
         <div className="messageSender">
             <div className="messageSender__top">
-                <Avatar src="https://scontent-mia3-1.xx.fbcdn.net/v/t1.0-9/94235878_10215623293391506_6975524731248181248_n.jpg?_nc_cat=104&_nc_sid=85a577&_nc_ohc=YS7V780FovUAX9hcoKp&_nc_ht=scontent-mia3-1.xx&oh=b58138cdf6056d96d32eec3c5ad82db2&oe=5FADF4F4"/>
+                <Avatar src={user?.photoURL} alt={user?.displayName}/>
 
                 <form>
                     <input type="text" className="messageSender__input" placeholder="What's on your mind?" value={input} onChange={(e) => setInput(e.target.value)}/>
 
                     <input type="file" className="messageSender__fileSelector" onChange={handleChange}/>
 
-                    <button onClick={handleSubmit} type="submit">
+                    <button onClick={handleSubmit} type="submit" disabled={!input}>
                         Hidden Submit
                     </button>
                 </form>

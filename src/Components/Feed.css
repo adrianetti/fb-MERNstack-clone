@@ -1,0 +1,14 @@
+.feed {
+    display: block;
+    flex-direction: column;
+    padding: 50px;
+    margin-right: auto;
+    margin-left: auto;
+    align-content: center;
+}
+
+.feed__storyReel {
+    display: grid;
+    justify-content: center;
+    margin-bottom: 10px;
+}
